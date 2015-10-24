@@ -1,0 +1,274 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+    <title>Babylon - Getting Started</title>
+
+    <style>
+    html, body {
+        overflow: hidden;
+        width   : 100%;
+        height  : 100%;
+        margin  : 0;
+        padding : 0;
+    }
+
+    #renderCanvas {
+        width   : 100%;
+        height  : 100%;
+        touch-action: none;
+    }
+</style>
+
+	<script type="text/javascript" src="babylon.2.2.js"></script>
+	<script type="text/javascript" src="Oimo.js"></script>
+	<script type="text/javascript" src="Controller.js"></script>
+
+</head>
+<body>
+	<canvas id="renderCanvas"></canvas>
+
+	<script>
+
+	document.addEventListener("DOMContentLoaded", function() {
+		var body;
+		var speed = 5;
+		var rotationQuaternion = 2*Math.PI;
+		var canvas = document.getElementById("renderCanvas") ;
+		var engine = new BABYLON.Engine(canvas, true) ;
+		var Control = new Controller();
+		var scene = new BABYLON.Scene(engine);
+		// var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 15,-50), scene);
+		var camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 15, -45), scene);
+    	
+
+		// camera.minZ = 0.1;
+		// camera.setTarget(BABYLON.Vector3.Zero());
+		// camera.attachControl(canvas, false);
+
+		scene.enablePhysics();
+		scene.setGravity(new BABYLON.Vector3(0, -100, 0));
+
+		var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
+		
+		var texture = new BABYLON.Texture("outUVRaceMap2.png", scene);
+		var map = new BABYLON.StandardMaterial("nomMat50", scene);
+		map.diffuseTexture = texture;
+		// var ground = new BABYLON.Mesh.CreateGround('ground1', 15, 10, 2, scene);
+		// ground.position.y = -1;
+		// ground.material = bilard;
+
+		var loader = new BABYLON.AssetsManager(scene);
+
+		var meshTask = loader.addMeshTask("map", "", "", "RaceMap.babylon");
+		var meshTask2 = loader.addMeshTask("car", "", "", "RaceCar.babylon");
+		// Fonction appelée quand le chargement de l’objet est terminé
+		var animationBox = new BABYLON.Animation("anim", "rotation.x", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+		// var animationBox2 = new BABYLON.Animation("anim2", "material.diffuseColor", 60, BABYLON.Animation.ANIMATIONTYPE_COLOR3, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+		var keys = [];
+		var keys2 = []; 
+
+		keys.push({ frame: 0, value: 1},{ frame: 100, value: 10});
+		keys2.push({ frame: 0, value: 1},{ frame: 100, value: 10});
+		var model = BABYLON.Mesh.CreateBox("car", 2, scene);
+
+		// model.isVisible = false;
+		var modelMap = BABYLON.Mesh.CreateGround("map0", 9.5, 5.5, 1, scene);
+
+		var horsMap = BABYLON.Mesh.CreateBox("map1", 2.1, scene);
+		horsMap.parent = modelMap;
+		horsMap.scaling.y = 0.01;
+		horsMap.scaling.x = 2;
+		horsMap.isVisible = false;
+
+		var horsMap2 = BABYLON.Mesh.CreateBox("map2", 2.1, scene);
+		horsMap2.parent = modelMap;
+		horsMap2.scaling.y = 0.01;
+		horsMap2.scaling.x = 2.2;
+		horsMap2.scaling.z = 0.9;
+		horsMap2.isVisible = false;
+
+		var horsMap3 = BABYLON.Mesh.CreateBox("map3", 2.1, scene);
+		horsMap3.parent = modelMap;
+		horsMap3.scaling.y = 0.01;
+		horsMap3.scaling.x = 2.4;
+		horsMap3.scaling.z = 0.8;
+		horsMap3.isVisible = false;
+
+		var horsMap4 = BABYLON.Mesh.CreateBox("map4", 2.1, scene);
+		horsMap4.parent = modelMap;
+		horsMap4.scaling.y = 0.01;
+		horsMap4.scaling.x = 2.6;
+		horsMap4.scaling.z = 0.7;
+		horsMap4.isVisible = false;
+
+		// horsMap4.rotation.x = Math.PI/2;
+		// horsMap2.rotation.y = Math.PI/2;
+		// var modelMap2 = BABYLON.Mesh.CreateGround("map2", 9.5, 1.5, 1, scene);
+		// // modelMap2.parent = modelMap;
+		// modelMap2.position.z += 4;
+		// var modelMap3 = BABYLON.Mesh.CreateGround("map3", 2, 5.5, 1, scene);
+		// // modelMap3.parent = modelMap;
+		// modelMap3.position.z += 2;
+		// modelMap3.position.x += 4;
+		// var modelMap4 = BABYLON.Mesh.CreateGround("map4", 2, 5.5, 1, scene);
+		// // modelMap4.parent = modelMap;
+		// modelMap4.position.z += 2;
+		// modelMap4.position.x -= 4;
+		modelMap.isVisible = false;
+		animationBox.setKeys(keys);
+		// animationBox2.setKeys(keys2);
+
+		camera.radius = 15; // how far from the object to follow
+		camera.heightOffset = 5; // how high above the object to place the camera
+		camera.rotationOffset = 270; // the viewing angle
+		camera.cameraAcceleration = 0.05 // how fast to move
+		camera.maxCameraSpeed = 20 // speed limit
+
+		camera.target = model;
+		scene.activeCamera = camera;
+			
+			
+			
+
+		meshTask.onSuccess =function(task)
+		{ 
+			
+			// console.log(task.loadedMeshes);
+			// console.log(task.loadedMeshes[0].material);
+			
+
+
+
+			document.addEventListener('keydown', function(event){ return Control.keyDown(event.keyCode);} );
+			document.addEventListener('keyup', function(event){ return Control.keyUp(event.keyCode);} );
+			// ares = task.loadedMeshes[0];
+			// model.material = map;
+
+		};
+		scene.debugLayer.show();
+		loader.onFinish = function (tasks) {
+			console.log(tasks);
+			for(var i = 0; i < tasks.length; i++)
+			{
+				if(tasks[i].name == "map")
+				{
+					for(var j = 0; j < tasks[i].loadedMeshes.length; j++)
+					{
+						tasks[i].loadedMeshes[j].material = map;
+						tasks[i].loadedMeshes[j].parent = modelMap;
+						tasks[i].loadedMeshes[j].position.y -= 0.36;
+						tasks[i].loadedMeshes[j].position.x -= 0.735;
+						// tasks[i].loadedMeshes[j].position.z += 2;
+						// tasks[i].loadedMeshes[j].position.z -= 0.075;
+						tasks[i].loadedMeshes[j].rotation.x = Math.PI/2;
+						modelMap.scaling.x = 10;
+						modelMap.scaling.y = 10;
+						modelMap.scaling.z = 10;
+						modelMap.rotation.z = Math.PI*0/180;
+					}
+				}
+				else if (tasks[i].name == "car")
+				{
+					for(var j = 0; j < tasks[i].loadedMeshes.length; j++)
+					{
+
+						tasks[i].loadedMeshes[j].parent = model;
+						tasks[i].loadedMeshes[j].position.x -=0.5;
+						tasks[i].loadedMeshes[j].position.z +=3;
+						tasks[i].loadedMeshes[j].position.y -=1;
+						tasks[i].loadedMeshes[j].rotation.y = Math.PI*90/180;
+						model.rotation.z = Math.PI*0/180;
+						model.position.z = -15;
+						model.position.y = 2;
+						model.position.x = 0;
+					}
+					model.computeWorldMatrix(true);
+				}
+				
+				
+			}
+			
+			// for (var i = 0; i < task.loadedMeshes[0].material.length ; i++) {
+			// 	task.loadedMeshes[0].material[i].specularColor.b = 1;
+			// };
+			
+			// camera.parent = model;
+			bodyMap = modelMap.setPhysicsState({ impostor: BABYLON.PhysicsEngine.PlaneImpostor, mass: 0, friction: 0, restitution:0 });
+			// modelMap2.setPhysicsState({ impostor: BABYLON.PhysicsEngine.PlaneImpostor, mass: 0, friction: 0, restitution:0 });
+			// modelMap3.setPhysicsState({ impostor: BABYLON.PhysicsEngine.PlaneImpostor, mass: 0, friction: 0, restitution:0 });
+			// modelMap4.setPhysicsState({ impostor: BABYLON.PhysicsEngine.PlaneImpostor, mass: 0, friction: 0, restitution:0 });
+
+			body = model.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1500, friction: 0, restitution:0 });
+			// bodyMap.body.addShape(horsMap);
+			// bodyMap.body.removeShape(horsMap);
+			// bodyMap.body.syncShapes();
+
+			// ares.animations.push(animationBox);
+			// ares.animations.push(animationBox2);
+			 // scene.beginAnimation(ares, 0, 100, true);
+			 engine.runRenderLoop(function () {
+				scene.render();
+				body.body.setOrientation(0,rotationQuaternion,0);
+				// body.body.sleeping = false;
+				// camera.setTarget(model.position);
+				if(Control.moveLeft)
+				{
+					rotationQuaternion -= Math.PI*2/180;
+					// model.applyImpulse(new BABYLON.Vector3(-1,0,0), model.position);
+					// model.position.x--;
+					// model.updatePhysicsBodyPosition();
+					// model.rotation.x--;
+				}
+				if(Control.moveRight)
+				{
+					rotationQuaternion += Math.PI*2/180;
+					// model.applyImpulse(new BABYLON.Vector3(1,0,0), model.position);
+					// model.position.x++;
+					// model.rotation.x = Math.PI/4;
+					// model.rotate(BABYLON.Axis.Y, 0.3, BABYLON.Space.LOCAL);
+				}
+				if(Control.moveForward)
+				{
+					console.log(rotationQuaternion);
+					var x = Math.cos(rotationQuaternion)*speed;
+					var z = Math.sin(rotationQuaternion)*speed;
+					model.applyImpulse(new BABYLON.Vector3(x, 0, -z), model.position);
+					// model.position.z++;
+				}
+				if(Control.moveBackward)
+				{
+					var x = Math.cos(rotationQuaternion)*speed;
+					var z = Math.sin(rotationQuaternion)*speed;
+					model.applyImpulse(new BABYLON.Vector3(-x, 0, z), model.position);
+					// model.position.z--;
+				}
+				if (body != null)
+				{
+					body.body.linearVelocity.scaleEqual(0.94);
+					body.body.angularVelocity.scaleEqual(0);
+				}
+				
+
+				 if (model.intersectsMesh(horsMap, false) || model.intersectsMesh(horsMap2, false) || model.intersectsMesh(horsMap3, false) || model.intersectsMesh(horsMap4, false))
+				 {
+				 	console.log(body);
+				 	// bodyMap.impostor = BABYLON.PhysicsEngine.NO_IMPOSTOR ;
+				 	body.body.position.y-=0.5;
+				 	// body.body.sleep();
+				 }
+			});
+
+		};
+
+		loader.load();
+
+
+
+
+
+	}, false) ;
+
+	</script>
+
+</body>
+</html>
