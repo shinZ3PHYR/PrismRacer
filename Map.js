@@ -106,6 +106,7 @@ function Map(scene, loader){
     this.finishCollider.position = finishPos; 
 
     this.finishCollider.scaling = finishScale;
+    this.finishCollider.isVisible = false;
 
             //checkpoint
     this.checkPoint = new BABYLON.Mesh.CreateBox("finishLine", 2, scene);
@@ -118,11 +119,13 @@ function Map(scene, loader){
     this.checkPoint.material = materialCP;
     this.checkPoint.computeWorldMatrix(true);
 
+
             //checkPoint Collider
     this.checkPointCollider = BABYLON.Mesh.CreateBox("finishCollider", 20, scene);
             this.checkPointCollider.material = matBB;
             this.checkPointCollider.position = new BABYLON.Vector3(modelMap.position.x +8, modelMap.position.y, modelMap.position.z +20);
             this.checkPointCollider.scaling = new BABYLON.Vector3(0.2, 0.01, 0.8);
+            this.checkPointCollider.isVisible = false;
 }
 Map.prototype.checkHole = function(car){
 	_this = this;
