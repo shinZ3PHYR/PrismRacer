@@ -8,11 +8,38 @@ function Car(scene){
     this.isLoaded = false;
     this.body = null;
     this.model = null;
-   
+    this.canMove = false;
     this.wfl = null;
     this.wfr = null;
     this.wbl = null;
     this.wbr = null;
+
+    // var fountain = BABYLON.Mesh.CreateBox("foutain", 1.0, scene);
+    // this.flamme = new BABYLON.ParticleSystem("particles", 2000, scene);
+    // this.flamme.particleTexture = new BABYLON.Texture("assets/Flare.png", scene);
+    // this.flamme.emitter = fountain;
+    // this.flamme.minEmitBox = new BABYLON.Vector3(-1, 0, 0); // Starting all From
+    // this.flamme.maxEmitBox = new BABYLON.Vector3(1, 0, 0);
+    // this.flamme.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
+    // this.flamme.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
+    // this.flamme.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
+    // this.flamme.minSize = 0.1;
+    // this.flamme.maxSize = 0.5;
+    // this.flamme.minLifeTime = 0.3;
+    // this.flamme.maxLifeTime = 1.5;
+    // this.flamme.emitRate = 1000;
+    // this.flamme.manualEmitCount = 300;
+    // this.flamme.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+    // this.flamme.direction1 = new BABYLON.Vector3(-7, 8, 3);
+    // this.flamme.direction2 = new BABYLON.Vector3(7, 8, -3);
+    // this.flamme.minAngularSpeed = 0;
+    // this.flamme.maxAngularSpeed = Math.PI;
+    // this.flamme.minEmitPower = 1;
+    // this.flamme.maxEmitPower = 3;
+    // this.flamme.updateSpeed = 0.005;
+    // this.flamme.targetStopDuration = 5;
+    // this.flamme.start();
+    
         // dummy newMeshes
         this.car = null;
         
@@ -80,10 +107,10 @@ Car.prototype.load = function(loader)
 
             task.loadedMeshes[i].position.x += 0.1;
             task.loadedMeshes[i].position.z +=3;
-            task.loadedMeshes[i].position.y -=1;
+            task.loadedMeshes[i].position.y -=2.3;
             task.loadedMeshes[i].rotation.y = Math.PI*90/180;
             _this.model.rotation.z = Math.PI*0/180;
-            _this.model.position.z = -15;
+            _this.model.position.z = -20;
             _this.model.position.y = 5;
             _this.model.position.x = 0;
 
@@ -91,7 +118,7 @@ Car.prototype.load = function(loader)
         }
 
 
-        _this.carBody = _this.model.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1500, friction: 0, restitution:0 });
+        _this.carBody = _this.model.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1500, friction: 0.2, restitution:0 });
         _this.model.checkCollisions = true;
         // console.log(_this.model);     
         _this.isLoaded = true;
@@ -106,43 +133,50 @@ Car.prototype.load = function(loader)
 Car.prototype.updateCar = function (newMeshes) {
 
 
-    this.carBody.body.setOrientation(0,this.carOrientation,0);
+    this.carBody.body.setOrientation(0, this.carOrientation, 0);
     // this.body.body.sleeping = false;
 
     this.carBody.body.linearVelocity.scaleEqual(1);
-    if(Controller.moveLeft)
+    if (this.canMove)
     {
-        this.carOrientation -= Math.PI*2/180;
-        this.carBody.body.linearVelocity.scaleEqual(0.9777777);
+       if(Controller.moveLeft)
+        {
+
+            this.carOrientation -= Math.PI*2/180;
+            // _this.wbl.rotation.x++;
+            this.carBody.body.linearVelocity.scaleEqual(0.9777777);
+        }
+        if(Controller.moveRight)
+        {
+            this.carOrientation += Math.PI*2/180;
+        }
+        if(Controller.moveForward)
+        {
+            // this.wheeling(deltaTime);
+            // console.log(this.carOrientation);
+            var x = Math.cos(this.carOrientation)*4;
+            var z = Math.sin(this.carOrientation)*4;
+            this.model.applyImpulse(new BABYLON.Vector3(x, 0, -z), this.model.position);
+            
+            // this.carBody.body.linearVelocity+=0.01;
+        }
+        if(Controller.moveBackward)
+        {
+            var x = Math.cos(this.carOrientation)*2;
+            var z = Math.sin(this.carOrientation)*2;
+            this.model.applyImpulse(new BABYLON.Vector3(-x, 0, z), this.model.position);
+            // this.carBody.body.linearVelocity-=0.01;
+        } 
     }
-    else if(Controller.moveRight)
-    {
-        this.carOrientation += Math.PI*2/180;
-    }
-    else if(Controller.moveForward)
-    {
-        // this.wheeling(deltaTime);
-        // console.log(this.carOrientation);
-        var x = Math.cos(this.carOrientation);
-        var z = Math.sin(this.carOrientation);
-        this.model.applyImpulse(new BABYLON.Vector3(x, 0, -z), this.model.position);
-        // this.carBody.body.linearVelocity+=0.01;
-    }
-    else if(Controller.moveBackward)
-    {
-        var x = Math.cos(this.carOrientation);
-        var z = Math.sin(this.carOrientation);
-        this.model.applyImpulse(new BABYLON.Vector3(-x*0.5, 0, z), this.model.position);
-        // this.carBody.body.linearVelocity-=0.01;
-    }
+    
 
 };
 Car.prototype.improveDrive = function(){
     _this = this;
     if (_this.carBody != null)
-    {
-        // _this.carBody.body.linearVelocity.scaleEqual(1);
-        _this.carBody.body.angularVelocity.scaleEqual(1000);
+    {1
+        this.carBody.body.linearVelocity.scaleEqual(1);
+        this.carBody.body.angularVelocity.scaleEqual(0);
     }
 }
 Car.prototype.wheeling = function(deltaTime){

@@ -6,7 +6,7 @@ var MainScene = (function (){
    this.scene = new BABYLON.Scene(engine);
 
    this.scene.enablePhysics();
-   this.scene.setGravity(new BABYLON.Vector3(0, -20, 0));
+   this.scene.setGravity(new BABYLON.Vector3(0, -200, 0));
 
    this.camera = null;
    this.loader;
@@ -79,8 +79,8 @@ MainScene.prototype.addLightAndCamera = function () {
     var _this = this;
 
     _this.camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 15, -45), this.scene);
-    _this.camera.radius = 15; // how far from the object to follow
-    _this.camera.heightOffset = 5; // how high above the object to place the camera
+    _this.camera.radius = 10; // how far from the object to follow
+    _this.camera.heightOffset = 4; // how high above the object to place the camera
     _this.camera.rotationOffset = 270; // the viewing angle
     _this.camera.cameraAcceleration = 0.05 // how fast to move
     _this.camera.maxCameraSpeed = 20 // speed limit
@@ -91,6 +91,10 @@ MainScene.prototype.addLightAndCamera = function () {
     _this.light.position = new BABYLON.Vector3(0, 600, 0);
     
 
+    // _this.camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 15,-50), this.scene);
+    // _this.camera.minZ = 0.1;
+    // _this.camera.setTarget(BABYLON.Vector3.Zero());
+    // _this.camera.attachControl(this.canvas, false);
 
     // this.camera.keysDown = [67];
     // this.camera.keysLeft = [67];

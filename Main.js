@@ -18,6 +18,8 @@ var Main = (function () {
         this.elapsed = 0;
         this.lapTime = 0;
 
+
+
         this.gameState = "run";
 
         if (!BABYLON.Engine.isSupported()) {
@@ -49,7 +51,10 @@ var Main = (function () {
            return _this.mainLoop();
 
        });
-
+        // this.camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 15,-50), this.scene);
+        // this.camera.minZ = 0.1;
+        // this.camera.setTarget(BABYLON.Vector3.Zero());
+        // this.camera.attachControl(this.canvas, false);
         //Module Timer 
         //Set the elapsed time
         this.Timer = function() {
