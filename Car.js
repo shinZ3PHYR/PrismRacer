@@ -128,6 +128,48 @@ Car.prototype.load = function(loader)
         console.log("dayum, Failed to load mesh !");
     }
 
+     // Particules
+            var particleSystem = new BABYLON.ParticleSystem("particules", 10000, _this.scene);
+            particleSystem.particleTexture = new BABYLON.Texture("assets/smoke.jpg", _this.scene);
+            particleSystem.emitter = _this.model;
+            // particleSystem.direction1 = new BABYLON.Vector3(0.3, 0, 1);
+            particleSystem.direction2 = new BABYLON.Vector3(-0.3, 0, 1);
+            particleSystem.color1 = new BABYLON.Color3(1, 1, 1);
+            particleSystem.color2 = new BABYLON.Color3(1, 0, 0);
+            particleSystem.colorDead = new BABYLON.Color3(0.5, 0.5, 0.5);
+            console.log(particleSystem.color1);
+            particleSystem.emitRate = 50;
+            particleSystem.maxLifeTime = 0.6;
+            particleSystem.minLifeTime = 0.2;
+            particleSystem.minEmitPower = 10;
+            // particleSystem.start();
+
+            // particleSystem.updateFunction = function (particles) {
+
+            //     for (var index = 0; index < particles.length; index++) {
+            //         var particle = particles[index];
+            //         particle.age += particleSystem._scaledUpdateSpeed;
+            //         if (particle.age >= particle.lifeTime) {
+            //             particleSystem.recycleParticle(particle);
+            //             index--;
+            //             continue;
+            //         }
+            //         else {
+            //             particle.colorStep.scaleToRef(particleSystem._scaledUpdateSpeed, particleSystem._scaledColorStep);
+            //             particle.color.addInPlace(particleSystem._scaledColorStep);
+            //             if (particle.color.a < 0)
+            //                 particle.color.a = 0;
+            //             particle.angle += particle.angularSpeed * particleSystem._scaledUpdateSpeed;
+            //             particle.direction.scaleToRef(particleSystem._scaledUpdateSpeed, particleSystem._scaledDirection);
+            //             particle.position.addInPlace(particleSystem._scaledDirection);
+            //             particleSystem.gravity.scaleToRef(particleSystem._scaledUpdateSpeed, particleSystem._scaledGravity);
+            //             particle.direction.addInPlace(particleSystem._scaledGravity);
+            //         }
+            //     }
+            //     particleSystem.emitter.rotate.y = Math.PI * Math.random();
+            //     particleSystem.emitter.rotate.x = Math.PI * Math.random();
+            // }
+
 };
 
 Car.prototype.updateCar = function (newMeshes) {
@@ -156,7 +198,7 @@ Car.prototype.updateCar = function (newMeshes) {
             // console.log(this.carOrientation);
             var x = Math.cos(this.carOrientation)*4;
             var z = Math.sin(this.carOrientation)*4;
-            this.model.applyImpulse(new BABYLON.Vector3(x, 0, -z), this.model.position);
+            this.model.applyImpulse(new BABYLON.Vector3(x*0.5, 0, -z), this.model.position);
             
             // this.carBody.body.linearVelocity+=0.01;
         }
@@ -164,8 +206,9 @@ Car.prototype.updateCar = function (newMeshes) {
         {
             var x = Math.cos(this.carOrientation)*2;
             var z = Math.sin(this.carOrientation)*2;
-            this.model.applyImpulse(new BABYLON.Vector3(-x, 0, z), this.model.position);
+            this.model.applyImpulse(new BABYLON.Vector3(-x*0.5, 0, z), this.model.position);
             // this.carBody.body.linearVelocity-=0.01;
+   
         } 
     }
     

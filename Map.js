@@ -1,6 +1,17 @@
 'use strict';
 function Map(scene, loader){
 	scene.enablePhysics();
+
+    // Skybox
+    var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+    var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", scene);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.disableLighting = true;
+    skybox.material = skyboxMaterial;
     var mapParent = new BABYLON.Mesh("mapParent", scene);
     var mapTask = loader.addMeshTask("map", "", "assets/", "RaceMap.babylon");
     var texture = new BABYLON.Texture("assets/outUVRaceMap2.png", scene);
@@ -15,28 +26,28 @@ function Map(scene, loader){
     this.horsMap.scaling.y = 0.01;
     this.horsMap.scaling.x = 2.8;
     this.horsMap.scaling.z = 0.5;
-    // this.horsMap.isVisible = false;
+    this.horsMap.isVisible = false;
 
     this.horsMap2 = BABYLON.Mesh.CreateBox("HorsMap2", 2.1, scene);
     this.horsMap2.parent = modelMap;
     this.horsMap2.scaling.y = 0.01;
     this.horsMap2.scaling.x = 2.2;
     this.horsMap2.scaling.z = 0.9;
-    // this.horsMap2.isVisible = false;
+    this.horsMap2.isVisible = false;
 
     this.horsMap3 = BABYLON.Mesh.CreateBox("HorsMap3", 2.1, scene);
     this.horsMap3.parent = modelMap;
     this.horsMap3.scaling.y = 0.01;
    	this.horsMap3.scaling.x = 2.4;
     this.horsMap3.scaling.z = 0.8;
-    // this.horsMap3.isVisible = false;
+    this.horsMap3.isVisible = false;
 
     this.horsMap4 = BABYLON.Mesh.CreateBox("HorsMap4", 2.1, scene);
     this.horsMap4.parent = modelMap;
     this.horsMap4.scaling.y = 0.01;
     this.horsMap4.scaling.x = 2.6;
     this.horsMap4.scaling.z = 0.7;
-    // this.horsMap4.isVisible = false;
+    this.horsMap4.isVisible = false;
     map.diffuseTexture = texture;
 
     this.horsMapDestroy = BABYLON.Mesh.CreateBox("HorsMap5", 20, scene);
@@ -45,7 +56,7 @@ function Map(scene, loader){
     this.horsMapDestroy.scaling.x = 2.5;
     this.horsMapDestroy.scaling.z = 2.5;
     this.horsMapDestroy.position.y -=2;
-    // this.horsMapDestroy.isVisible = false;
+    this.horsMapDestroy.isVisible = false;
     map.diffuseTexture = texture;
 
 
